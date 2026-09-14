@@ -448,6 +448,22 @@
     "subsection": "Applications & Resumes"
   },
   {
+    "name": "openvidstudio",
+    "url": "https://github.com/AnayDhawan/openvidstudio",
+    "description": "Open-source Remotion pipeline for AI agents to build quick product demo videos (FOSS, free)",
+    "pricing": null,
+    "section": "University & Career Prep",
+    "subsection": "Building & Competitions"
+  },
+  {
+    "name": "StudyMap Competitions",
+    "url": "https://studyymap.com/competitions",
+    "description": "Crowdsourced calendar of student hackathons and competitions worldwide (FOSS, free)",
+    "pricing": null,
+    "section": "University & Career Prep",
+    "subsection": "Building & Competitions"
+  },
+  {
     "name": "DA Global",
     "url": "https://daglobal.org",
     "description": "Global education access network, formerly Diversity Abroad, covering study abroad and student global programs",

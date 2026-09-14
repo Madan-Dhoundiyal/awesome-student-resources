@@ -11,7 +11,7 @@ A curated list of the best software, tools, textbooks, channels, and resources f
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-![Resources](https://img.shields.io/badge/resources-193-blue)
+![Resources](https://img.shields.io/badge/resources-195-blue)
 ![Sections](https://img.shields.io/badge/sections-13-purple)
 [![Changelog](https://img.shields.io/badge/changelog-v2.0.0-lightgrey.svg)](CHANGELOG.md)
 
@@ -36,7 +36,7 @@ This list covers life around school: discounts, money, career prep, and wellbein
 | 🎓  | [Student Discounts & Free Access](#student-discounts--free-access)             |    14     |
 | 💰  | [Scholarships & Financial Aid](#scholarships--financial-aid)                   |    14     |
 | 💵  | [Financial Literacy & Money Management](#financial-literacy--money-management) |    13     |
-| 🎯  | [University & Career Prep](#university--career-prep)                           |    32     |
+| 🎯  | [University & Career Prep](#university--career-prep)                           |    34     |
 | 🔧  | [Vocational & Alternative Paths](#vocational--alternative-paths)               |    10     |
 | 🎤  | [Debate & Public Speaking](#debate--public-speaking)                           |    11     |
 | 🏠  | [Homeschooling](#homeschooling)                                                |    14     |
@@ -154,6 +154,18 @@ What comes after exams: applications, resumes, interviews, and time away from th
 - **[UC Berkeley LinkedIn Guide](https://career.berkeley.edu/Info/LinkedIn)** - Free university career-center guide to building and optimizing a student LinkedIn profile (free).
 - **[UCAS](https://www.ucas.com)** - The official UK application portal for undergraduate degree courses (free).
 - **[Yoodli](https://yoodli.ai)** - Free AI coach for interview and communication practice (freemium).
+
+</details>
+
+### Building & Competitions
+
+Hackathons, competitions, and the tools to build something worth entering.
+
+<details open>
+<summary>Show resources</summary>
+
+- **[openvidstudio](https://github.com/AnayDhawan/openvidstudio)** - Open-source Remotion pipeline for AI agents to build quick product demo videos (FOSS, free).
+- **[StudyMap Competitions](https://studyymap.com/competitions)** - Crowdsourced calendar of student hackathons and competitions worldwide (FOSS, free).
 
 </details>
 
