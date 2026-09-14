@@ -450,7 +450,7 @@
   {
     "name": "openvidstudio",
     "url": "https://github.com/AnayDhawan/openvidstudio",
-    "description": "Open-source Remotion pipeline for AI agents to build quick product demo videos (FOSS, free)",
+    "description": "Open-source Remotion pipeline for AI agents to build quick product demo videos. ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) ![free](https://img.shields.io/badge/free-2489CA?style=flat-square)",
     "pricing": null,
     "section": "University & Career Prep",
     "subsection": "Building & Competitions"
@@ -458,7 +458,7 @@
   {
     "name": "StudyMap Competitions",
     "url": "https://studyymap.com/competitions",
-    "description": "Crowdsourced calendar of student hackathons and competitions worldwide (FOSS, free)",
+    "description": "Crowdsourced calendar of student hackathons and competitions worldwide. ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) ![free](https://img.shields.io/badge/free-2489CA?style=flat-square)",
     "pricing": null,
     "section": "University & Career Prep",
     "subsection": "Building & Competitions"
