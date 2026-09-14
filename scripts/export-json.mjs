@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Parses README.md into data/resources.json: one record per resource entry
-// (name, url, description, pricing, section, subsection). Gives tools other
-// than a human reading the page something to consume (e.g. the searchable-site
-// idea in #53), and a stable shape for others to build on.
+// (name, url, description, pricing, tags, section, subsection). Gives tools
+// other than a human reading the page something to consume (e.g. the
+// searchable-site idea in #53), and a stable shape for others to build on.
 //
 // Usage:
 //   node scripts/export-json.mjs           writes data/resources.json
@@ -16,12 +16,15 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { NON_CONTENT_SECTIONS } from './check-list-format.mjs';
+import { parseTaggedDescription, pricingTag } from './badges.mjs';
 
 // Pure: parse every resource entry into
-// { name, url, description, pricing, section, subsection }.
+// { name, url, description, pricing, tags, section, subsection }.
 // `section` is the nearest preceding ## heading. `subsection` is the nearest
 // preceding ### heading since that ## started, or null if the entry sits
-// directly under the ##. `pricing` is "free" | "freemium" | "paid" | null.
+// directly under the ##. `tags` is every shields.io badge on the line, in
+// order (e.g. ["FOSS", "free"]). `pricing` is the one pricing tag among them
+// ("free" | "freemium" | "paid"), or null if the entry somehow has none.
 export function parseResources(readmeText) {
   const lines = readmeText.split(/\r?\n/);
   const resources = [];
@@ -44,11 +47,11 @@ export function parseResources(readmeText) {
     if (!m || !section) continue;
 
     const [, name, url, rawDescription] = m;
-    const tagMatch = rawDescription.match(/^(.*?)\s*\((free|freemium|paid)\)\.$/);
-    const description = (tagMatch ? tagMatch[1] : rawDescription.replace(/\.$/, '')).trim();
-    const pricing = tagMatch ? tagMatch[2] : null;
+    const { description: taggedDescription, tags } = parseTaggedDescription(rawDescription);
+    const description = taggedDescription.replace(/\.$/, '');
+    const pricing = pricingTag(tags);
 
-    resources.push({ name, url, description, pricing, section, subsection });
+    resources.push({ name, url, description, pricing, tags, section, subsection });
   }
   return resources;
 }

@@ -56,12 +56,12 @@ export function buildReport(stale, totalCount, now, staleDays = STALE_AFTER_DAYS
   lines.push('');
   lines.push('- the link still works');
   lines.push('- the resource is still maintained (not abandoned, not a dead project)');
-  lines.push('- the pricing tag — `(free)`, `(freemium)`, or `(paid)` — is still accurate');
+  lines.push('- the badges — the pricing badge (`free`, `freemium`, `paid`) and, where present, `FOSS` — are still accurate');
   lines.push('');
   lines.push(
     'After checking an entry, record it in `data/last-verified.json` (a flat ' +
       '`{ "url": "YYYY-MM-DD" }` map) with a PR. Fix anything you find wrong in the same PR ' +
-      "(update the pricing tag, fix the URL, or remove the entry per CONTRIBUTING.md's " +
+      "(update the badges, fix the URL, or remove the entry per CONTRIBUTING.md's " +
       'removal guidance).'
   );
   lines.push('');

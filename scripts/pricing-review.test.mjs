@@ -2,31 +2,35 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseEntries, selectBatch, buildChecklist } from './pricing-review.mjs';
 
+const FREE = '![free](https://img.shields.io/badge/free-2489CA?style=flat-square)';
+const FREEMIUM = '![freemium](https://img.shields.io/badge/freemium-F5A623?style=flat-square)';
+const PAID = '![paid](https://img.shields.io/badge/paid-D33833?style=flat-square)';
+
 const README = `# Title
 
 ## Exam Prep
 
 ### SAT
 
-- **[Alpha](https://alpha.example)** - x (free).
-- **[Beta](https://beta.example)** - y (freemium).
+- **[Alpha](https://alpha.example)** - x ${FREE}.
+- **[Beta](https://beta.example)** - y ${FREEMIUM}.
 
 ## By Subject
 
-- **[Gamma](https://gamma.example)** - z (paid).
+- **[Gamma](https://gamma.example)** - z ${PAID}.
 - **[Delta](https://delta.example)** - untagged entry with pricing in prose.
 `;
 
-test('parseEntries extracts name, url, tag, and nearest heading', () => {
+test('parseEntries extracts name, url, tag, tags, and nearest heading', () => {
   const entries = parseEntries(README);
   assert.equal(entries.length, 4);
   assert.deepEqual(
-    entries.map((e) => [e.name, e.tag, e.section]),
+    entries.map((e) => [e.name, e.tag, e.tags, e.section]),
     [
-      ['Alpha', 'free', 'SAT'],
-      ['Beta', 'freemium', 'SAT'],
-      ['Gamma', 'paid', 'By Subject'],
-      ['Delta', null, 'By Subject'],
+      ['Alpha', 'free', ['free'], 'SAT'],
+      ['Beta', 'freemium', ['freemium'], 'SAT'],
+      ['Gamma', 'paid', ['paid'], 'By Subject'],
+      ['Delta', null, [], 'By Subject'],
     ]
   );
 });
@@ -34,7 +38,7 @@ test('parseEntries extracts name, url, tag, and nearest heading', () => {
 test('parseEntries records 1-based line numbers', () => {
   const entries = parseEntries(README);
   assert.equal(entries[0].name, 'Alpha');
-  assert.equal(README.split('\n')[entries[0].line - 1], '- **[Alpha](https://alpha.example)** - x (free).');
+  assert.equal(README.split('\n')[entries[0].line - 1], `- **[Alpha](https://alpha.example)** - x ${FREE}.`);
 });
 
 test('selectBatch is deterministic for the same index', () => {
@@ -78,14 +82,14 @@ test('selectBatch caps size at the number of entries', () => {
 test('buildChecklist renders checkboxes, tags, and the untagged fallback', () => {
   const entries = parseEntries(README);
   const md = buildChecklist(entries, 0, 2);
-  assert.match(md, /- \[ \] \[Alpha\]\(https:\/\/alpha\.example\) — `\(free\)` — _SAT_/);
-  assert.match(md, /- \[ \] \[Beta\]\(https:\/\/beta\.example\) — `\(freemium\)`/);
+  assert.match(md, /- \[ \] \[Alpha\]\(https:\/\/alpha\.example\) — `free` — _SAT_/);
+  assert.match(md, /- \[ \] \[Beta\]\(https:\/\/beta\.example\) — `freemium`/);
   // A batch of 2 renders exactly 2 checklist items.
   assert.equal((md.match(/^- \[ \]/gm) || []).length, 2);
 });
 
-test('buildChecklist notes the untagged case for entries with no pricing tag', () => {
+test('buildChecklist notes the untagged case for entries with no badge', () => {
   const entries = parseEntries(README);
   const md = buildChecklist(entries, 1, 2); // Gamma + Delta; Delta is untagged
-  assert.match(md, /\[Delta\].*_no explicit tag_/);
+  assert.match(md, /\[Delta\].*_no badge_/);
 });

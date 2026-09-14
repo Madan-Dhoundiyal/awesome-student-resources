@@ -44,6 +44,27 @@ software), but releases are still tagged so changes are easy to point to.
   `awesome-lint` now runs on every PR touching README.md, required before
   merge, working toward the `sindresorhus/awesome` submission checklist
   (#103, #102).
+- A **Building & Competitions** subsection under University & Career Prep:
+  openvidstudio, StudyMap Competitions.
+- A new **Helpful Repositories** top-level section (GitHub repos, not hosted
+  tools or apps): build-your-own-x, developer-roadmap,
+  free-programming-books, public-apis.
+
+### Changed
+
+- Every resource entry now carries a shields.io tag badge (a pricing badge —
+  `free`, `freemium`, or `paid` — plus `FOSS` where the resource is also free
+  and open source) instead of a trailing `(free)`-style parenthetical.
+  Applied across all 195 existing entries; the four that carried no
+  parenthetical before (Erasmus Mundus Joint Masters, GOV.UK Home Education,
+  HSLDA Canada, ANAD) default to `free`, matching the exemption they were
+  written under. `CONTRIBUTING.md`'s entry format and Quality Standards
+  updated to match. `scripts/check-list-format.mjs` now fails the build on a
+  missing or duplicate pricing badge, an unrecognized tag name, or a FOSS
+  Picks entry with no FOSS badge. `scripts/export-json.mjs` and
+  `scripts/pricing-review.mjs` updated to parse badges instead of the old
+  parenthetical; `data/resources.json` gained a `tags` array field alongside
+  the existing `pricing` field. New shared module: `scripts/badges.mjs`.
 
 ### Fixed
 

@@ -12,11 +12,13 @@
 
 import { readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { parseTaggedDescription, pricingTag } from './badges.mjs';
 
 export const BATCH_SIZE = 15;
 
-// Pure: parse every resource entry into { name, url, tag, section, line }.
-// `tag` is the trailing (free|freemium|paid) if present, else null.
+// Pure: parse every resource entry into { name, url, tag, tags, section, line }.
+// `tag` is the entry's pricing badge ("free" | "freemium" | "paid"), or null
+// if it somehow has none. `tags` is every badge on the line, in order.
 // `section` is the nearest preceding heading (## or ###).
 export function parseEntries(readmeText) {
   const lines = readmeText.split(/\r?\n/);
@@ -31,9 +33,9 @@ export function parseEntries(readmeText) {
     }
     const m = lines[i].match(/^- \*\*\[(.+?)\]\((.+?)\)\*\* - (.+)$/);
     if (!m) continue;
-    const [, name, url, desc] = m;
-    const tag = desc.match(/\((free|freemium|paid)\)\.$/)?.[1] ?? null;
-    entries.push({ name, url, tag, section, line: i + 1 });
+    const [, name, url, rawDescription] = m;
+    const { tags } = parseTaggedDescription(rawDescription);
+    entries.push({ name, url, tag: pricingTag(tags), tags, section, line: i + 1 });
   }
   return entries;
 }
@@ -65,20 +67,21 @@ export function buildChecklist(entries, batchIndex, batchSize = BATCH_SIZE) {
       `each month and covers the whole list about every ${cycles} months).`
   );
   lines.push('');
-  lines.push('For each entry, open the link and confirm the pricing tag still matches:');
+  lines.push('For each entry, open the link and confirm the badges still match:');
   lines.push('');
-  lines.push('- `(free)` — still free, no paywall on the useful parts');
-  lines.push('- `(freemium)` — still has a genuinely usable free tier');
-  lines.push('- `(paid)` — still paid');
+  lines.push('- `free` — still free, no paywall on the useful parts');
+  lines.push('- `freemium` — still has a genuinely usable free tier');
+  lines.push('- `paid` — still paid');
+  lines.push('- `FOSS` — still free and open source, where that badge is present');
   lines.push('');
-  lines.push('Tick a box once confirmed. If one is wrong, open a PR fixing the tag (and');
+  lines.push('Tick a box once confirmed. If one is wrong, open a PR fixing the badge (and');
   lines.push("note it under CHANGELOG.md's Unreleased if you remove the entry).");
   lines.push('');
 
   for (const e of batch) {
-    const tag = e.tag ? `\`(${e.tag})\`` : '_no explicit tag_';
+    const tags = e.tags.length ? e.tags.map((t) => `\`${t}\``).join(' ') : '_no badge_';
     const section = e.section ? ` — _${e.section}_` : '';
-    lines.push(`- [ ] [${e.name}](${e.url}) — ${tag}${section}`);
+    lines.push(`- [ ] [${e.name}](${e.url}) — ${tags}${section}`);
   }
 
   lines.push('');

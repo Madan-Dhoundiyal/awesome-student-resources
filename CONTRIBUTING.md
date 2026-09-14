@@ -23,7 +23,7 @@ Check the entry meets the [Quality Standards](README.md#quality-standards):
 
 - [ ] Genuinely useful to students for studying, building, or organizing.
 - [ ] Real and maintained, not abandoned or a dead link.
-- [ ] Free, freemium, or clearly worth the price, with the pricing noted.
+- [ ] Free, freemium, or clearly worth the price, with exactly one pricing badge on the entry (plus FOSS where it applies).
 - [ ] A reputable tool, channel, or book, not spam or an affiliate funnel.
 - [ ] Short, plain-language description.
 
@@ -32,18 +32,29 @@ Check the entry meets the [Quality Standards](README.md#quality-standards):
 ## Entry format
 
 ```md
-- **[Name](https://homepage)** - Short description of what it does.
+- **[Name](https://homepage)** - Short description of what it does ![free](https://img.shields.io/badge/free-2489CA?style=flat-square).
 ```
 
 For books and textbooks, use the title (add the author where it helps) and link to the official or publisher page:
 
 ```md
-- **[Deep Work](https://calnewport.com/books/deep-work/)** - Build the ability to focus without distraction.
+- **[Deep Work](https://calnewport.com/books/deep-work/)** - Build the ability to focus without distraction ![paid](https://img.shields.io/badge/paid-D33833?style=flat-square).
 ```
 
-Keep the description to one line, roughly 10 words or fewer. Lead with a verb where it reads naturally, skip adjectives like "amazing" or "powerful," and note the pricing when it matters: `(free)`, `(freemium)`, `(paid)`, or "free, open source" for FOSS. No em dashes.
+Keep the description to one line, roughly 10 words or fewer. Lead with a verb where it reads naturally, skip adjectives like "amazing" or "powerful," and put the tag badge(s) right before the closing period, not inside it. No em dashes.
 
-"When it matters" means: tag it if a student could reasonably be surprised (a freemium tool that reads as free, a paid service, a free tier with real limits). You don't need to tag something whose free-ness is already obvious from the description itself (an official government site, an open-source project, a nonprofit's own guide).
+### Tag badges
+
+Every entry carries exactly one pricing badge, always, no exceptions for "obviously free" sites, plus the FOSS badge on top of it when the resource is also free and open source (every entry in FOSS Picks gets FOSS by definition, and CI enforces that):
+
+| Badge | Meaning | Markdown |
+| --- | --- | --- |
+| ![free](https://img.shields.io/badge/free-2489CA?style=flat-square) | pricing | `![free](https://img.shields.io/badge/free-2489CA?style=flat-square)` |
+| ![freemium](https://img.shields.io/badge/freemium-F5A623?style=flat-square) | pricing | `![freemium](https://img.shields.io/badge/freemium-F5A623?style=flat-square)` |
+| ![paid](https://img.shields.io/badge/paid-D33833?style=flat-square) | pricing | `![paid](https://img.shields.io/badge/paid-D33833?style=flat-square)` |
+| ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) | additive, on top of a pricing badge | `![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square)` |
+
+Order: FOSS first, then the pricing badge, e.g. `![FOSS](...) ![free](...)`. `scripts/check-list-format.mjs` fails the build on a missing pricing badge, more than one pricing badge, an unrecognized tag name, or a FOSS Picks entry with no FOSS badge, so get this right locally before opening a PR (`node scripts/check-list-format.mjs`).
 
 ---
 
@@ -59,6 +70,7 @@ Add your single bullet to the closest matching section:
 - Debate & Public Speaking
 - Homeschooling
 - FOSS Picks (fully free and open source only)
+- Helpful Repositories (GitHub repos, not hosted tools or apps)
 - Blogs, Newsletters & Podcasts
 - Books We Trust (study skill and mindset books)
 - Guides & How-Tos

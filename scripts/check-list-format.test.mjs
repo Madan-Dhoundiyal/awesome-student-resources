@@ -10,6 +10,10 @@ import {
   DESCRIPTION_WORD_WARNING_THRESHOLD,
 } from './check-list-format.mjs';
 
+const FREE = '![free](https://img.shields.io/badge/free-2489CA?style=flat-square)';
+const FREEMIUM = '![freemium](https://img.shields.io/badge/freemium-F5A623?style=flat-square)';
+const FOSS = '![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square)';
+
 // A minimal, fully-valid README + CONTRIBUTING pair. Each negative test starts
 // from these and introduces exactly one defect via string replacement.
 const VALID_README = `# Title
@@ -24,8 +28,8 @@ const VALID_README = `# Title
 <details open>
 <summary>Show resources</summary>
 
-- **[Apple](https://apple.example)** - A fruit tool (free).
-- **[Banana](https://banana.example)** - Another fruit tool (free).
+- **[Apple](https://apple.example)** - A fruit tool ${FREE}.
+- **[Banana](https://banana.example)** - Another fruit tool ${FREE}.
 
 </details>
 
@@ -34,7 +38,7 @@ const VALID_README = `# Title
 <details open>
 <summary>Show resources</summary>
 
-- **[Cherry](https://cherry.example)** - A small red fruit (free).
+- **[Cherry](https://cherry.example)** - A small red fruit ${FREE}.
 
 </details>
 `;
@@ -61,8 +65,8 @@ test('valid fixture produces no errors', () => {
 
 test('malformed entry (no trailing period) is flagged', () => {
   const readme = VALID_README.replace(
-    '- **[Apple](https://apple.example)** - A fruit tool (free).',
-    '- **[Apple](https://apple.example)** - A fruit tool (free)'
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}`
   );
   const errors = errorsFor(readme);
   assert.equal(errors.length, 1);
@@ -71,8 +75,8 @@ test('malformed entry (no trailing period) is flagged', () => {
 
 test('malformed entry (plain link, no bold) is flagged', () => {
   const readme = VALID_README.replace(
-    '- **[Apple](https://apple.example)** - A fruit tool (free).',
-    '- [Apple](https://apple.example) - A fruit tool (free).'
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- [Apple](https://apple.example) - A fruit tool ${FREE}.`
   );
   const errors = errorsFor(readme);
   assert.ok(errors.some((e) => /doesn't match .*format/.test(e)));
@@ -80,10 +84,10 @@ test('malformed entry (plain link, no bold) is flagged', () => {
 
 test('out-of-order entries are flagged', () => {
   const readme = VALID_README.replace(
-    `- **[Apple](https://apple.example)** - A fruit tool (free).
-- **[Banana](https://banana.example)** - Another fruit tool (free).`,
-    `- **[Banana](https://banana.example)** - Another fruit tool (free).
-- **[Apple](https://apple.example)** - A fruit tool (free).`
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.
+- **[Banana](https://banana.example)** - Another fruit tool ${FREE}.`,
+    `- **[Banana](https://banana.example)** - Another fruit tool ${FREE}.
+- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`
   );
   const errors = errorsFor(readme);
   assert.ok(errors.some((e) => /not alphabetically sorted/.test(e)));
@@ -92,16 +96,16 @@ test('out-of-order entries are flagged', () => {
 test('alphabetical order is case-insensitive', () => {
   // "apple" (lowercase) before "Banana" must still pass.
   const readme = VALID_README.replace(
-    '- **[Apple](https://apple.example)** - A fruit tool (free).',
-    '- **[apple](https://apple.example)** - A fruit tool (free).'
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[apple](https://apple.example)** - A fruit tool ${FREE}.`
   );
   assert.deepEqual(errorsFor(readme), []);
 });
 
 test('duplicate URL within a section is flagged', () => {
   const readme = VALID_README.replace(
-    '- **[Banana](https://banana.example)** - Another fruit tool (free).',
-    '- **[Banana](https://apple.example)** - Another fruit tool (free).'
+    `- **[Banana](https://banana.example)** - Another fruit tool ${FREE}.`,
+    `- **[Banana](https://apple.example)** - Another fruit tool ${FREE}.`
   );
   const errors = errorsFor(readme);
   assert.ok(errors.some((e) => /Duplicate URL/.test(e)));
@@ -110,8 +114,8 @@ test('duplicate URL within a section is flagged', () => {
 test('same URL across different sections is allowed', () => {
   // Cherry (in Beta) reuses Apple's URL (in Alpha) — cross-section reuse is fine.
   const readme = VALID_README.replace(
-    '- **[Cherry](https://cherry.example)** - A small red fruit (free).',
-    '- **[Cherry](https://apple.example)** - A small red fruit (free).'
+    `- **[Cherry](https://cherry.example)** - A small red fruit ${FREE}.`,
+    `- **[Cherry](https://apple.example)** - A small red fruit ${FREE}.`
   );
   assert.deepEqual(errorsFor(readme), []);
 });
@@ -130,8 +134,8 @@ test('Table of Contents entry with no matching heading is flagged', () => {
 
 test('marketing adjective in a description is flagged', () => {
   const readme = VALID_README.replace(
-    '- **[Apple](https://apple.example)** - A fruit tool (free).',
-    '- **[Apple](https://apple.example)** - An amazing fruit tool (free).'
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - An amazing fruit tool ${FREE}.`
   );
   const errors = errorsFor(readme);
   assert.ok(errors.some((e) => /marketing adjective.*amazing/.test(e)));
@@ -160,6 +164,60 @@ test('trailing " (...)" notes in CONTRIBUTING bullets are ignored when matching'
   assert.deepEqual(errorsFor(VALID_README, contributing), []);
 });
 
+// --- Badge tag rules ---
+
+test('an entry with no pricing badge is flagged', () => {
+  const readme = VALID_README.replace(
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - A fruit tool.`
+  );
+  const errors = errorsFor(readme);
+  assert.ok(errors.some((e) => /"Apple".*missing a pricing badge/.test(e)));
+});
+
+test('an entry with two pricing badges is flagged', () => {
+  const readme = VALID_README.replace(
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE} ${FREEMIUM}.`
+  );
+  const errors = errorsFor(readme);
+  assert.ok(errors.some((e) => /"Apple".*more than one pricing badge/.test(e)));
+});
+
+test('an unrecognized tag is flagged', () => {
+  const readme = VALID_README.replace(
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - A fruit tool ![shiny](https://img.shields.io/badge/shiny-000?style=flat-square) ${FREE}.`
+  );
+  const errors = errorsFor(readme);
+  assert.ok(errors.some((e) => /"Apple".*unrecognized tag.*shiny/.test(e)));
+});
+
+test('a FOSS Picks entry with no FOSS badge is flagged', () => {
+  const readme = VALID_README.replace('## Alpha', '## FOSS Picks').replace(
+    `- [Alpha](#alpha)`,
+    `- [FOSS Picks](#foss-picks)`
+  );
+  const contributing = VALID_CONTRIBUTING.replace('- Alpha', '- FOSS Picks');
+  const errors = errorsFor(readme, contributing);
+  assert.ok(errors.some((e) => /"Apple" is in FOSS Picks but is missing the FOSS badge/.test(e)));
+});
+
+test('a FOSS Picks entry with the FOSS badge passes', () => {
+  const readme = VALID_README.replace('## Alpha', '## FOSS Picks')
+    .replace(`- [Alpha](#alpha)`, `- [FOSS Picks](#foss-picks)`)
+    .replace(
+      `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+      `- **[Apple](https://apple.example)** - A fruit tool ${FOSS} ${FREE}.`
+    )
+    .replace(
+      `- **[Banana](https://banana.example)** - Another fruit tool ${FREE}.`,
+      `- **[Banana](https://banana.example)** - Another fruit tool ${FOSS} ${FREE}.`
+    );
+  const contributing = VALID_CONTRIBUTING.replace('- Alpha', '- FOSS Picks');
+  assert.deepEqual(errorsFor(readme, contributing), []);
+});
+
 // --- Exported helpers ---
 
 test('slugify matches GitHub anchor rules', () => {
@@ -182,16 +240,16 @@ test('findBannedAdjective matches hyphen and space variants, respects word bound
   assert.equal(findBannedAdjective('clear, plain description'), null);
 });
 
-test('countDescriptionWords ignores the trailing pricing tag and period', () => {
-  assert.equal(countDescriptionWords('One two three (free).'), 3);
-  assert.equal(countDescriptionWords('One two three (freemium).'), 3);
+test('countDescriptionWords ignores trailing badges and the closing period', () => {
+  assert.equal(countDescriptionWords(`One two three ${FREE}.`), 3);
+  assert.equal(countDescriptionWords(`One two three ${FREEMIUM}.`), 3);
   assert.equal(countDescriptionWords('One two three.'), 3);
 });
 
 test('checkDescriptionLengths is silent for descriptions at or under the threshold', () => {
   const readme = `## Alpha
 
-- **[Apple](https://apple.example)** - ${'word '.repeat(DESCRIPTION_WORD_WARNING_THRESHOLD).trim()} (free).
+- **[Apple](https://apple.example)** - ${'word '.repeat(DESCRIPTION_WORD_WARNING_THRESHOLD).trim()} ${FREE}.
 `;
   assert.deepEqual(checkDescriptionLengths(readme), []);
 });
@@ -200,7 +258,7 @@ test('checkDescriptionLengths warns once a description runs past the threshold',
   const longDesc = 'word '.repeat(DESCRIPTION_WORD_WARNING_THRESHOLD + 1).trim();
   const readme = `## Alpha
 
-- **[Apple](https://apple.example)** - ${longDesc} (free).
+- **[Apple](https://apple.example)** - ${longDesc} ${FREE}.
 `;
   const warnings = checkDescriptionLengths(readme);
   assert.equal(warnings.length, 1);
@@ -210,8 +268,8 @@ test('checkDescriptionLengths warns once a description runs past the threshold',
 test('checkListFormat does not fail on an over-length description (advisory only)', () => {
   const longDesc = 'word '.repeat(DESCRIPTION_WORD_WARNING_THRESHOLD + 5).trim();
   const readme = VALID_README.replace(
-    '- **[Apple](https://apple.example)** - A fruit tool (free).',
-    `- **[Apple](https://apple.example)** - ${longDesc} (free).`
+    `- **[Apple](https://apple.example)** - A fruit tool ${FREE}.`,
+    `- **[Apple](https://apple.example)** - ${longDesc} ${FREE}.`
   );
   assert.deepEqual(errorsFor(readme), []);
 });
