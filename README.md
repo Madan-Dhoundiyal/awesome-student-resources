@@ -164,7 +164,7 @@ Hackathons, competitions, and the tools to build something worth entering.
 <details open>
 <summary>Show resources</summary>
 
-- **[openvidstudio](https://github.com/AnayDhawan/openvidstudio)** - Open-source Remotion pipeline for AI agents to build quick product demo videos. ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) ![free](https://img.shields.io/badge/free-2489CA?style=flat-square).
+- **[openvidstudio](https://openvidstudio.vercel.app)** - Open-source Remotion pipeline for AI agents to build quick product demo videos. ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) ![free](https://img.shields.io/badge/free-2489CA?style=flat-square).
 - **[StudyMap Competitions](https://studyymap.com/competitions)** - Crowdsourced calendar of student hackathons and competitions worldwide. ![FOSS](https://img.shields.io/badge/FOSS-3DA639?style=flat-square) ![free](https://img.shields.io/badge/free-2489CA?style=flat-square).
 
 </details>
