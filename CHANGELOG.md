@@ -81,9 +81,23 @@ software), but releases are still tagged so changes are easy to point to.
   `home-affairs.ec.europa.eu` (#197, #215, #220).
 - The Muse cover letter guide URL updated: the old `/advice/cover-letter`
   path 404s; now points at `/advice/cover-letters` (#197, #215, #220).
+- `swe.org` excluded from the dead-link check config: the scheduled run
+  reported a timeout, but manually verified (curl, three consecutive
+  requests with the configured browser user agent) to return a fast, clean
+  403, the same bot-blocking-at-the-edge signature as the existing
+  exclusions rather than a real outage (#289).
 
 ### Removed
 
+- DA Global (formerly Diversity Abroad; University & Career Prep). The
+  scheduled dead-link check flagged a connection refused error; manually
+  confirmed (curl and a separate fetch from a different network, on both
+  port 80 and 443, across several retries) that the apex domain's server
+  is not accepting connections at all, unlike the bot-detection false
+  positives elsewhere in this file. The organization itself is still active
+  on other subdomains (e.g. `impact.daglobal.org`), but the homepage this
+  entry linked to is currently down, so removing rather than carrying it as
+  an exception (#289).
 - LASPAU: the organization ceased operations on September 30, 2023 (their
   own site confirms this); the listed URL now serves an expired certificate
   for a defunct `laspau.harvard.edu` redirect (#197, #215, #220).

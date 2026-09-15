@@ -56,6 +56,15 @@ user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 # returns HTTP 200 with real content. NCFE is the RBI/SEBI/IRDAI/PFRDA-backed
 # National Centre for Financial Education, a genuine, live resource. Excluding
 # rather than removing it.
+#
+# swe.org: reported in the #289 run as a timeout. Manually verified (curl,
+# three consecutive requests with the configured browser user agent, from a
+# separate network) to return a fast, clean 403 every time, the same
+# bot-blocking-at-the-edge signature as the other exclusions above rather
+# than a real outage; 403 is already globally accepted, but this host
+# apparently sometimes hangs instead of returning it. Society of Women
+# Engineers is a live, active organization; excluding rather than removing
+# the scholarships entry.
 exclude = [
   "https://www.autodesk.com/education/edu-software/overview",
   "https://freedomhomeschooling.com/",
@@ -66,4 +75,5 @@ exclude = [
   "https://www.canada.ca/en/financial-consumer-agency.html",
   "https://www.dewr.gov.au/australian-apprenticeships",
   "https://ncfe.org.in/",
+  "https://swe.org/apply-for-a-swe-scholarship/",
 ]
