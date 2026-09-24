@@ -36,7 +36,7 @@ This list covers life around school: discounts, money, career prep, and wellbein
 | 🎓  | [Student Discounts & Free Access](#student-discounts--free-access)             |    14     |
 | 💰  | [Scholarships & Financial Aid](#scholarships--financial-aid)                   |    14     |
 | 💵  | [Financial Literacy & Money Management](#financial-literacy--money-management) |    13     |
-| 🎯  | [University & Career Prep](#university--career-prep)                           |    33     |
+| 🎯  | [University & Career Prep](#university--career-prep)                           |    34     |
 | 🔧  | [Vocational & Alternative Paths](#vocational--alternative-paths)               |    11     |
 | 🎤  | [Debate & Public Speaking](#debate--public-speaking)                           |    11     |
 | 🏠  | [Homeschooling](#homeschooling)                                                |    14     |
